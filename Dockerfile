@@ -4,5 +4,5 @@ COPY . /app
 RUN mvn clean package
 FROM openjdk:17-slim
 WORKDIR /app
-COPY --from=build /app/target/my-app-1.0-SNAPSHOT.jar /app/my-app.jar
+COPY --from=build /app/target/Exercise-Tracker-0.0.1-SNAPSHOT.jar /app/my-app.jar
 CMD ["java", "-jar", "my-app.jar"]
