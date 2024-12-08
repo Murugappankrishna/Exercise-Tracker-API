@@ -41,7 +41,7 @@ public class UserController {
         return userService.saveExercise(id, description, duration, date);
     }
 
-    @GetMapping("/users/{_id}")
+    @GetMapping("/users/{_id}/logs")
     ResponseEntity<UserExerciseLogsDto> getUserExerciseLog(@PathVariable("_id") Integer id) {
         return userService.getUserExerciseLog(id);
     }
