@@ -2,8 +2,10 @@ package com.murugappan.Exercise.Tracker.service;
 
 import com.murugappan.Exercise.Tracker.dao.ExerciseDao;
 import com.murugappan.Exercise.Tracker.dao.UserDao;
+import com.murugappan.Exercise.Tracker.dto.LogDto;
 import com.murugappan.Exercise.Tracker.dto.UserDto;
 import com.murugappan.Exercise.Tracker.dto.UserExerciseDto;
+import com.murugappan.Exercise.Tracker.dto.UserExerciseLogsDto;
 import com.murugappan.Exercise.Tracker.model.Exercise;
 import com.murugappan.Exercise.Tracker.model.User;
 import org.springframework.http.HttpStatus;
@@ -19,11 +21,11 @@ import java.util.List;
 public class UserService {
     private final UserDao userDao;
     private final ExerciseDao exerciseDao;
-    DateTimeFormatter formatter;
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd yyyy");
 
     UserService(UserDao userDao, ExerciseDao exerciseDao) {
         this.userDao = userDao;
-        this.exerciseDao=exerciseDao;
+        this.exerciseDao = exerciseDao;
     }
 
     public ResponseEntity<UserDto> saveUser(String username) {
@@ -53,10 +55,10 @@ public class UserService {
 
 
     public ResponseEntity<UserExerciseDto> saveExercise(Integer id,
-                                        String description,
-                                        Integer duration,
-                                        LocalDate date) {
-        this.formatter= DateTimeFormatter.ofPattern("EEE MMM dd yyyy");
+                                                        String description,
+                                                        Integer duration,
+                                                        LocalDate date) {
+
         Exercise exercise = new Exercise();
         exercise.setDescription(description);
         exercise.setDate(date);
@@ -72,5 +74,26 @@ public class UserService {
         userExerciseDto.setDuration(duration);
         return ResponseEntity.ok().body(userExerciseDto);
 
+    }
+
+    public ResponseEntity<UserExerciseLogsDto> getUserExerciseLog(Integer id) {
+        User user = new User();
+        List<Exercise> exerciseList = new ArrayList<Exercise>();
+        List<LogDto> LogDtoList = new ArrayList<LogDto>();
+        UserExerciseLogsDto userExerciseLogsDto = new UserExerciseLogsDto();
+        user = userDao.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        userExerciseLogsDto.setUserName(user.getUserName());
+        userExerciseLogsDto.setId(user.getId().toString());
+        userExerciseLogsDto.setCount(user.getExercise().size());
+        exerciseList = user.getExercise();
+        for (Exercise exercise : exerciseList) {
+            LogDto LogDto = new LogDto();
+            LogDto.setDescription(exercise.getDescription());
+            LogDto.setDuration(exercise.getDuration());
+            LogDto.setDate((exercise.getDate()).format(formatter));
+            LogDtoList.add(LogDto);
+        }
+        userExerciseLogsDto.setLog(LogDtoList);
+        return ResponseEntity.ok().body(userExerciseLogsDto);
     }
 }

@@ -2,7 +2,7 @@ package com.murugappan.Exercise.Tracker.controler;
 
 import com.murugappan.Exercise.Tracker.dto.UserDto;
 import com.murugappan.Exercise.Tracker.dto.UserExerciseDto;
-import com.murugappan.Exercise.Tracker.model.User;
+import com.murugappan.Exercise.Tracker.dto.UserExerciseLogsDto;
 import com.murugappan.Exercise.Tracker.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +26,7 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    ResponseEntity<List<UserDto>>getUser() {
+    ResponseEntity<List<UserDto>> getUser() {
         return userService.getUser();
     }
 
@@ -38,7 +38,11 @@ public class UserController {
         if (date == null) {
             date = LocalDate.now();
         }
-      return  userService.saveExercise(id,description,duration,date);
+        return userService.saveExercise(id, description, duration, date);
+    }
+
+    @GetMapping("/users/{_id}")
+    ResponseEntity<UserExerciseLogsDto> getUserExerciseLog(@PathVariable("_id") Integer id) {
+        return userService.getUserExerciseLog(id);
     }
 }
-
