@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDto {
-    @JsonProperty("_id")
-    Integer id;
     @JsonProperty("username")
     String user;
+    @JsonProperty("_id")
+    String id;
 }

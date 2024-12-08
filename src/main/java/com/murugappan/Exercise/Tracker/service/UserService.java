@@ -29,7 +29,7 @@ public class UserService {
         userDao.save(user);
         User savedUser = userDao.findById(user.getId()).orElseThrow(() -> new RuntimeException("User not found"));
         UserDto SavedUserDto = new UserDto();
-        SavedUserDto.setId(savedUser.getId());
+        SavedUserDto.setId(savedUser.getId().toString());
         SavedUserDto.setUser(savedUser.getUserName());
         return ResponseEntity.status(HttpStatus.CREATED).body(SavedUserDto);
     }
@@ -41,7 +41,7 @@ public class UserService {
         for (User user : allUser) {
             UserDto Userdto = new UserDto();
             Userdto.setUser(user.getUserName());
-            Userdto.setId(user.getId());
+            Userdto.setId(user.getId().toString());
             allUserDta.add(Userdto);
         }
         return ResponseEntity.status(HttpStatus.FOUND).body(allUserDta);
