@@ -18,7 +18,7 @@ public class Exercise {
     Integer id;
     String userName;
     String description;
-    String duration;
+    Integer duration;
     LocalDate date;
     @ManyToOne()
     User user;

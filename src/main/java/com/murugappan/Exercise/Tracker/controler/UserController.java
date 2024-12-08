@@ -1,6 +1,7 @@
 package com.murugappan.Exercise.Tracker.controler;
 
 import com.murugappan.Exercise.Tracker.dto.UserDto;
+import com.murugappan.Exercise.Tracker.dto.UserExerciseDto;
 import com.murugappan.Exercise.Tracker.model.User;
 import com.murugappan.Exercise.Tracker.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -30,14 +31,14 @@ public class UserController {
     }
 
     @PostMapping("/users/{_id}/exercises")
-    void postExerciseData(@PathVariable("_id") Integer id,
-                          @RequestParam("description") String description,
-                          @RequestParam("duration") String duration,
-                          @RequestParam(value = "date", required = false) LocalDate date) {
+    ResponseEntity<UserExerciseDto> postExerciseData(@PathVariable("_id") Integer id,
+                                                     @RequestParam("description") String description,
+                                                     @RequestParam("duration") Integer duration,
+                                                     @RequestParam(value = "date", required = false) LocalDate date) {
         if (date == null) {
             date = LocalDate.now();
         }
-        userService.saveExercise(id,description,duration,date);
+      return  userService.saveExercise(id,description,duration,date);
     }
 }
 
