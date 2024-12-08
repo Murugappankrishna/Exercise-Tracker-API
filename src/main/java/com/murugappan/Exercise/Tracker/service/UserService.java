@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -54,10 +55,7 @@ public class UserService {
     }
 
 
-    public ResponseEntity<UserExerciseDto> saveExercise(Integer id,
-                                                        String description,
-                                                        Integer duration,
-                                                        LocalDate date) {
+    public ResponseEntity<UserExerciseDto> saveExercise(Integer id, String description, Integer duration, LocalDate date) {
 
         Exercise exercise = new Exercise();
         exercise.setDescription(description);
@@ -76,24 +74,38 @@ public class UserService {
 
     }
 
-    public ResponseEntity<UserExerciseLogsDto> getUserExerciseLog(Integer id) {
+
+    public ResponseEntity<UserExerciseLogsDto> getUserExerciseLog(Integer id, LocalDate fromDate, LocalDate toDate) {
         User user = new User();
         List<Exercise> exerciseList = new ArrayList<Exercise>();
         List<LogDto> LogDtoList = new ArrayList<LogDto>();
         UserExerciseLogsDto userExerciseLogsDto = new UserExerciseLogsDto();
+
+
         user = userDao.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+
+
         userExerciseLogsDto.setUserName(user.getUserName());
         userExerciseLogsDto.setId(user.getId().toString());
-        userExerciseLogsDto.setCount(user.getExercise().size());
-        exerciseList = user.getExercise();
-        for (Exercise exercise : exerciseList) {
-            LogDto LogDto = new LogDto();
-            LogDto.setDescription(exercise.getDescription());
-            LogDto.setDuration(exercise.getDuration());
-            LogDto.setDate((exercise.getDate()).format(formatter));
-            LogDtoList.add(LogDto);
+        if (fromDate != null && toDate != null) {
+            System.out.println("not null");
+            exerciseList = user.getExercise().stream().filter(exercise -> !exercise.getDate().isBefore(fromDate) && !exercise.getDate().isAfter(toDate)).collect(Collectors.toList());
+        } else {
+            System.out.println("null");
+            exerciseList = user.getExercise();
         }
+        for (Exercise exercise : exerciseList) {
+            LogDto logDto = new LogDto();
+            logDto.setDescription(exercise.getDescription());
+            logDto.setDuration(exercise.getDuration());
+            logDto.setDate((exercise.getDate()).format(formatter));
+            LogDtoList.add(logDto);
+        }
+
+        userExerciseLogsDto.setCount(exerciseList.size());
         userExerciseLogsDto.setLog(LogDtoList);
+
         return ResponseEntity.ok().body(userExerciseLogsDto);
     }
+
 }

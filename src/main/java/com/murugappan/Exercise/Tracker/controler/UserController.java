@@ -41,8 +41,23 @@ public class UserController {
         return userService.saveExercise(id, description, duration, date);
     }
 
+//    @GetMapping({"/users/{_id}/logs", "/users/{_id}/logs/{from}/{to}"})
+//    ResponseEntity<UserExerciseLogsDto> getUserExerciseLog(@PathVariable("_id") Integer id,
+//                                                           @RequestParam(value = "from", required = false) LocalDate fromDate,
+//                                                           @RequestParam(value = "to", required = false) LocalDate toDate) {
+//        System.out.println(fromDate);
+//        System.out.println(toDate);
+//        return userService.getUserExerciseLog(id);
+//    }
+
     @GetMapping("/users/{_id}/logs")
-    ResponseEntity<UserExerciseLogsDto> getUserExerciseLog(@PathVariable("_id") Integer id) {
-        return userService.getUserExerciseLog(id);
+    ResponseEntity<UserExerciseLogsDto> getUserExerciseLog(
+            @PathVariable("_id") Integer id,
+            @RequestParam(value = "from", required = false) LocalDate fromDate,
+            @RequestParam(value = "to", required = false) LocalDate toDate
+    ) {
+
+        return userService.getUserExerciseLog(id, fromDate, toDate);
+
     }
 }
