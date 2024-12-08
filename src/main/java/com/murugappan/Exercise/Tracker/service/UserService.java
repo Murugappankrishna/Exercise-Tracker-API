@@ -44,7 +44,7 @@ public class UserService {
             Userdto.setId(user.getId().toString());
             allUserDta.add(Userdto);
         }
-        return ResponseEntity.status(HttpStatus.FOUND).body(allUserDta);
+        return ResponseEntity.ok().body(allUserDta);
 
     }
 
