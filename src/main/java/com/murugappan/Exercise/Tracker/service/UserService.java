@@ -88,16 +88,13 @@ public class UserService {
         userExerciseLogsDto.setUserName(user.getUserName());
         userExerciseLogsDto.setId(user.getId().toString());
         if (fromDate != null && toDate != null) {
-            System.out.println(fromDate + "" + toDate);
             exerciseList = user.getExercise().stream().filter(exercise -> !exercise.getDate().isBefore(fromDate) && !exercise.getDate().isAfter(toDate)).collect(Collectors.toList());
         } else if (limit != null) {
-            System.out.println(limit);
             exerciseList = user.getExercise().stream()
                     .limit(limit)
                     .collect(Collectors.toList());
 
         } else {
-            System.out.println("null");
             exerciseList = user.getExercise();
         }
         for (Exercise exercise : exerciseList) {
